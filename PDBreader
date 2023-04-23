@@ -1,0 +1,23 @@
+
+class Atom:
+    def __init__(self, coordinates, idd, residue_name, residue_id, element):
+        self.coord = coordinates
+        self.id = idd
+        self.residue_name = residue_name
+        self.residue_id = residue_id
+        self.element = element
+
+
+class PDBReader:
+    def __init__(self, path_to_file):
+        self.atoms = []
+        with open(path_to_file, "r") as f:
+            for line in f:
+                if line.startswith("ATOM"):  # ищем строку с атомом
+                    idd = int(line[6:11])
+                    element = line[12:16].strip()
+                    residue_name = line[17:20].strip()
+                    residue_id = int(line[22:26])
+                    coordinates = [float(line[30:38]), float(line[38:46]), float(line[46:54])]
+                    current_atom = Atom(coordinates, idd, residue_name, residue_id, element)
+                    self.atoms.append(current_atom)
